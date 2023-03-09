@@ -8,6 +8,9 @@ app.use(cors())
 
 app.use(express.json())
 
+const conn = require("./db/conn")
+conn()
+
 app.get('/', (req, res) => {
     res.send("Olá, Mundo!")
 })
