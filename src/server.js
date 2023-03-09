@@ -11,6 +11,10 @@ app.use(express.json())
 const conn = require("./db/conn")
 conn()
 
+const routes = require("./routes/router")
+
+app.use("/", routes)
+
 app.get('/', (req, res) => {
     res.send("Olá, Mundo!")
 })
