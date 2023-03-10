@@ -18,7 +18,7 @@ const checkPartyBudget = (budget, services) => {
 const partyController = {
 
     create: async (req, res) => {
-
+        try{
             const { title, author, description, budget, services } = req.body
 
             if (!title) {
@@ -45,6 +45,9 @@ const partyController = {
             })
 
             res.status(201).json({response, msg: "Festa criada com sucesso!"})
+        } catch (error) {
+            res.status(500).json({error})
+        }
     },
 
     getAll: async (req, res) => {
@@ -69,12 +72,36 @@ const partyController = {
             const party = await Party.findById(id)
               
             if (!party) {
-                res.status(404).json({ msg: "Festa não encontrado." })
+                res.status(404).json({ msg: "Festa não encontrada." })
                 return
             }
 
             res.json(party)
         } catch (error) {
+            res.status(500).json({error})
+        }
+    },
+
+    delete: async(req, res) => {
+        try {
+            const id = req.params.id
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                res.status(404).json({ msg: "Id inválido." })
+                return
+            }
+
+            const party = await Party.findById(id)
+              
+            if (!party) {
+                res.status(404).json({ msg: "Festa não encontrada." })
+                return
+            }
+
+            const deletedParty = await Party.findByIdAndDelete(id)
+
+            res.status(200).json({deletedParty, msg: "Festa excluída com sucesso"})
+        } catch (error) { 
             res.status(500).json({error})
         }
     },

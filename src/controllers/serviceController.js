@@ -66,7 +66,7 @@ const serviceController = {
                 return
             }
 
-            const service = await Service.findOne({_id: id})
+            const service = await Service.findById(id)
               
             if (!service) {
                 res.status(404).json({ msg: "Serviço não encontrado." })
