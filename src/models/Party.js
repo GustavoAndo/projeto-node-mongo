@@ -15,19 +15,14 @@ const partySchema = new Schema({
         },
         description: {
             type: String,
-            required: true
         },
         budget: {
             type: String,
             required: true
         },
-        image: {
-            type: String,
-            required: true
-        },
         services: {
             type: [serviceSchema],
-            required: true
+            default: []
         },  
     }, 
     {timestamps: true}

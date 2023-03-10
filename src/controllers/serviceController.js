@@ -4,13 +4,12 @@ const serviceController = {
     
     create: async (req, res) => {
         try {
-            const { name, description, price, image } = req.body
+            const { name, description, price } = req.body
 
             const response = await Service.create({
                 name,
                 description,
-                price,
-                image
+                price
             })
 
             res.status(201).json({response, msg: "Serviço criado com sucesso!"})
@@ -84,13 +83,12 @@ const serviceController = {
                 return
             }
     
-            const { name, description, price, image } = req.body
+            const { name, description, price } = req.body
     
             const service = {
                 name,
                 description,
-                price,
-                image
+                price
             }
     
             const updatedService = await Service.findByIdAndUpdate(id, service)
