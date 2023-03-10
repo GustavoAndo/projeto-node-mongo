@@ -15,7 +15,7 @@ const serviceController = {
 
             res.status(201).json({response, msg: "Serviço criado com sucesso!"})
         } catch (error) {
-            res.status(500).json({error: error})
+            res.status(500).json({error})
         }
     },
 
@@ -25,7 +25,7 @@ const serviceController = {
 
             res.json(services)
         } catch (error) {
-            res.status(500).json({error: error})
+            res.status(500).json({error})
         }
     },
 
@@ -47,9 +47,33 @@ const serviceController = {
 
             res.json(service)
         } catch (error) {
-            res.status(500).json({error: error})
+            res.status(500).json({error})
         }
     },
+
+    delete: async(req, res) => {
+        try {
+            const id = req.params.id
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                res.status(404).json({ msg: "Id inválido." })
+                return
+            }
+
+            const service = await Service.findOne({_id: id})
+              
+            if (!service) {
+                res.status(404).json({ msg: "Serviço não encontrado." })
+                return
+            }
+
+            const deletedService = await Service.findOneAndDelete({_id: id})
+
+            res.status(200).json({deletedService, msg: "Serviço excluído com sucesso"})
+        } catch (error) { 
+            res.status(500).json({error})
+        }
+    }
 
 }
 
