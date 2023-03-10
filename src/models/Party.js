@@ -21,8 +21,7 @@ const partySchema = new Schema({
             required: true
         },
         services: {
-            type: [serviceSchema],
-            default: []
+            type: [serviceSchema]
         },  
     }, 
     {timestamps: true}
