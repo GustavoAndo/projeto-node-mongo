@@ -1,5 +1,7 @@
-const router = require("express").Router
+const router = require("express").Router()
 
 const serviceController = require("../controllers/serviceController")
+
+router.route("/").post((req, res) => serviceController.create(req, res))
 
 module.exports = router
