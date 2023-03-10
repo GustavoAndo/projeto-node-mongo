@@ -106,6 +106,51 @@ const partyController = {
         }
     },
 
+    update: async(req, res) => {
+        try {
+            const id = req.params.id
+            const { title, author, description, budget, services } = req.body
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                res.status(404).json({ msg: "Id inválido." })
+                return
+            }
+
+            if (!title) {
+                return res.status(422).json({msg: 'O título é obrigatório.'})
+            }
+            if (!author){
+                return res.status(422).json({msg: 'O autor é obrigatório.'})
+            }
+            if (!budget){
+                return res.status(422).json({msg: 'O orçamento é obrigatório.'})
+            }
+
+            if (services && !checkPartyBudget(budget, services)) {
+                res.status(406).json({msg: "O seu orçamento é insuficiente"})
+                return
+            }
+
+            const party = {
+                title,
+                author,
+                description,
+                budget,
+                services
+            }
+    
+            const updatedParty = await Party.findByIdAndUpdate(id, party)
+    
+            if (!updatedParty) {
+                res.status(404).json({msg: "Festa não encontrada"})
+                return
+            } 
+    
+            res.status(200).json({party, msg: "Festa atualizada com sucesso."})
+        } catch (error) {
+            res.status(500).json({error})
+        }
+    }
 }
 
 module.exports = partyController
