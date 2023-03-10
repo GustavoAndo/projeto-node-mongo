@@ -17,7 +17,18 @@ const serviceController = {
         } catch (error) {
             res.status(500).json({error: error})
         }
+    },
+
+    getAll: async (req, res) => {
+        try {
+            const services = await Service.find()
+
+            res.json(services)
+        } catch (error) {
+            res.status(500).json({error: error})
+        }
     }
+
 }
 
 module.exports = serviceController
