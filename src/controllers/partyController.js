@@ -57,6 +57,28 @@ const partyController = {
         }
     },
 
+    get: async(req, res) => {
+        try {
+            const id = req.params.id
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                res.status(404).json({ msg: "Id inválido." })
+                return
+            }
+
+            const party = await Party.findById(id)
+              
+            if (!party) {
+                res.status(404).json({ msg: "Festa não encontrado." })
+                return
+            }
+
+            res.json(party)
+        } catch (error) {
+            res.status(500).json({error})
+        }
+    },
+
 }
 
 module.exports = partyController
