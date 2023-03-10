@@ -47,6 +47,16 @@ const partyController = {
             res.status(201).json({response, msg: "Festa criada com sucesso!"})
     },
 
+    getAll: async (req, res) => {
+        try {
+            const parties = await Party.find()
+
+            res.json(parties)
+        } catch (error) {
+            res.status(500).json({error})
+        }
+    },
+
 }
 
 module.exports = partyController
