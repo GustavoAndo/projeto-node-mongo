@@ -6,6 +6,13 @@ const serviceController = {
         try {
             const { name, description, price } = req.body
 
+            if (!name) {
+                return res.status(422).json({msg: 'O nome é obrigatório.'})
+            }
+            if (!price){
+                return res.status(422).json({msg: 'O preço é obrigatório.'})
+            }
+
             const response = await Service.create({
                 name,
                 description,
@@ -84,6 +91,13 @@ const serviceController = {
             }
     
             const { name, description, price } = req.body
+
+            if (!name) {
+                return res.status(422).json({msg: 'O nome é obrigatório.'})
+            }
+            if (!price){
+                return res.status(422).json({msg: 'O preço é obrigatório.'})
+            }
     
             const service = {
                 name,
