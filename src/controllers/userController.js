@@ -99,6 +99,48 @@ const userController = {
         }
     },
 
+    update: async(req, res) => {
+        try {
+            const { id } = req.params
+            const { name, email, profile } = req.body
+
+            if (!name) {
+                return res.status(422).json({msg: 'O nome é obrigatório.'})
+            }
+            if (!email){
+                return res.status(422).json({msg: 'O email é obrigatório.'})
+            }
+
+            if (profile && !["user", "manager", "admin"].includes(profile)){
+                return res.status(422).json({msg: 'Perfil inválido.'})
+            }
+
+            const userExists = await User.findOne({email})
+            const oldUser = await User.findById(id)
+
+            if (email != oldUser.email && userExists) {
+                return res.status(422).json({msg: 'Por favor, utilize outro email.'})
+            }
+
+            const user = {
+                name,
+                email,
+                profile
+            }
+    
+            const updatedUser = await User.findByIdAndUpdate(id, user)
+    
+            if (!updatedUser) {
+                return res.status(404).json({msg: "Usuário não encontrada"})
+            } 
+    
+            res.status(200).json({user, msg: "Usuário atualizada com sucesso."})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({error})
+        }
+    },
+
     login: async (req, res) => {
         try {
             const { email, password } = req.body
@@ -130,7 +172,7 @@ const userController = {
             console.log(error)
             res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
-    },
+    }
 
 }
 
