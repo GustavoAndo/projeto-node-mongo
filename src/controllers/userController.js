@@ -44,13 +44,33 @@ const userController = {
         }
     },
 
-    getAll: async (req, res) => {
+    getAll: async(req, res) => {
         try {
             const users = await User.find()
 
             res.json(users)
         } catch (error) {
             console.log(error)
+            res.status(500).json({error})
+        }
+    },
+
+    get: async(req, res) => {
+        try {
+            const id = req.params.id
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                return res.status(404).json({ msg: "Id inválido." })
+            }
+
+            const user = await User.findById(id)
+              
+            if (!user) {
+                return res.status(404).json({ msg: "Usuário não encontrado." })
+            }
+
+            res.json(user)
+        } catch (error) {
             res.status(500).json({error})
         }
     },
