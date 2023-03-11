@@ -1,4 +1,6 @@
 const {User} = require("../models/User")
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const userController = {
     
@@ -41,7 +43,40 @@ const userController = {
             res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
-    
+
+    login: async (req, res) => {
+        try {
+            const { email, password } = req.body
+
+            if (!email) {
+                return res.status(422).json({ msg: "O email é obrigatório"})
+            }
+
+            if (!password) {
+                return res.status(422).json({ msg: "A senha é obrigatória"})
+            }
+
+            const user = await User.findOne({email}).select("+password")
+
+            if (!user) {
+                return res.status(422).json({msg: "Usuário não encontrado."})
+            }
+            
+            const checkPassword = await bcrypt.compare(password, user.password)
+
+            if (!checkPassword) {
+                return res.status(422).json({msg: "Senha inválida"})
+            }
+
+            const token = jwt.sign({id: user._id}, process.env.SECRET)
+            
+            res.status(200).json({token, msg: "Autenticação realizada com sucesso"})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
+        }
+    },
+
 }
 
 module.exports = userController
