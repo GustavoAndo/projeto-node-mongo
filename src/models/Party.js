@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const {Schema} = mongoose
 
 const {serviceSchema} = require('./Service')
+const {userSchema} = require('./User')
 
 const partySchema = new Schema({
         title: {
@@ -10,7 +11,7 @@ const partySchema = new Schema({
             required: true
         },
         author: {
-            type: String,
+            type: userSchema,
             required: true
         },
         description: {
