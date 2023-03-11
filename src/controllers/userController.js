@@ -44,6 +44,17 @@ const userController = {
         }
     },
 
+    getAll: async (req, res) => {
+        try {
+            const users = await User.find()
+
+            res.json(users)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({error})
+        }
+    },
+
     login: async (req, res) => {
         try {
             const { email, password } = req.body
