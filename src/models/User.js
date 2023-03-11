@@ -17,6 +17,11 @@ const userSchema = new Schema({
             type: Number,
             required: true,
             select: false
+        },
+        profile: {
+            type: String,
+            enum: ['users', 'manager', 'admin'],
+            default: 'user'
         }
     },
     { timestamps: true }
