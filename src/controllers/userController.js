@@ -24,6 +24,10 @@ const userController = {
                 return res.status(422).json({msg: 'A senha é obrigatória.'})
             }
 
+            if (password.length < 8) {
+                return res.status(422).json({msg: 'A senha deve possuir pelo menos 8 caracteres.'})
+            }
+
             if (profile && !["user", "manager", "admin"].includes(profile)){
                 return res.status(422).json({msg: 'Perfil inválido.'})
             }
@@ -155,6 +159,10 @@ const userController = {
 
             if (!password) {
                 return res.status(422).json({msg: 'A senha é obrigatória.'})
+            }
+
+            if (password.length < 8) {
+                return res.status(422).json({msg: 'A senha deve possuir pelo menos 8 caracteres.'})
             }
     
             const updatedUser = await User.findByIdAndUpdate(id, {password: await hashPassword(password)})
