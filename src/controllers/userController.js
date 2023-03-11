@@ -166,7 +166,7 @@ const userController = {
                 return res.status(422).json({msg: "Senha inválida"})
             }
 
-            const token = jwt.sign({id: user._id}, process.env.SECRET)
+            const token = jwt.sign({id: user._id, profile: user.profile}, process.env.SECRET ?? '', {expiresIn: "8h"})
             
             res.status(200).json({token, msg: "Autenticação realizada com sucesso"})
         } catch (error) {
