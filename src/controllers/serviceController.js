@@ -21,7 +21,8 @@ const serviceController = {
 
             res.status(201).json({response, msg: "Serviço criado com sucesso!"})
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -31,7 +32,8 @@ const serviceController = {
 
             res.json(services)
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -53,7 +55,8 @@ const serviceController = {
 
             res.json(service)
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -77,7 +80,8 @@ const serviceController = {
 
             res.status(200).json({deletedService, msg: "Serviço excluído com sucesso"})
         } catch (error) { 
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -85,9 +89,8 @@ const serviceController = {
         try {
             const id = req.params.id
 
-            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-                res.status(404).json({ msg: "Id inválido." })
-                return
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {  
+                return res.status(404).json({ msg: "Id inválido." })
             }
     
             const { name, description, price } = req.body
@@ -108,13 +111,13 @@ const serviceController = {
             const updatedService = await Service.findByIdAndUpdate(id, service)
     
             if (!updatedService) {
-                res.status(404).json({msg: "Serviço não encontrado"})
-                return
+                return res.status(404).json({msg: "Serviço não encontrado"}) 
             } 
     
             res.status(200).json({service, msg: "Serviço atualizado com sucesso."})
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     }
 }

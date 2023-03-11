@@ -51,7 +51,7 @@ const userController = {
             res.json(users)
         } catch (error) {
             console.log(error)
-            res.status(500).json({error})
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -71,7 +71,8 @@ const userController = {
 
             res.json(user)
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -87,15 +88,15 @@ const userController = {
             const user = await User.findById(id)
               
             if (!user) {
-                res.status(404).json({ msg: "Usuário não encontrado." })
-                return
+                return res.status(404).json({ msg: "Usuário não encontrado." })
             }
 
             const deletedUser = await User.findByIdAndDelete(id)
 
             res.status(200).json({deletedUser, msg: "Usuário excluído com sucesso"})
         } catch (error) { 
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -137,7 +138,7 @@ const userController = {
             res.status(200).json({user, msg: "Usuário atualizada com sucesso."})
         } catch (error) {
             console.log(error)
-            res.status(500).json({error})
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 

@@ -32,8 +32,7 @@ const partyController = {
             }
 
             if (services && !checkPartyBudget(budget, services)) {
-                res.status(406).json({msg: "O seu orçamento é insuficiente"})
-                return
+                return res.status(406).json({msg: "O seu orçamento é insuficiente"})
             }
 
             const response = await Party.create({
@@ -46,7 +45,8 @@ const partyController = {
 
             res.status(201).json({response, msg: "Festa criada com sucesso!"})
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -56,7 +56,8 @@ const partyController = {
 
             res.json(parties)
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -72,13 +73,13 @@ const partyController = {
             const party = await Party.findById(id)
               
             if (!party) {
-                res.status(404).json({ msg: "Festa não encontrada." })
-                return
+                return res.status(404).json({ msg: "Festa não encontrada." })
             }
 
             res.json(party)
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -87,22 +88,21 @@ const partyController = {
             const id = req.params.id
             
             if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-                res.status(404).json({ msg: "Id inválido." })
-                return
+                return res.status(404).json({ msg: "Id inválido." })
             }
 
             const party = await Party.findById(id)
               
             if (!party) {
-                res.status(404).json({ msg: "Festa não encontrada." })
-                return
+                return res.status(404).json({ msg: "Festa não encontrada." })
             }
 
             const deletedParty = await Party.findByIdAndDelete(id)
 
             res.status(200).json({deletedParty, msg: "Festa excluída com sucesso"})
         } catch (error) { 
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     },
 
@@ -112,8 +112,7 @@ const partyController = {
             const { title, author, description, budget, services } = req.body
             
             if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-                res.status(404).json({ msg: "Id inválido." })
-                return
+                return res.status(404).json({ msg: "Id inválido." })
             }
 
             if (!title) {
@@ -127,8 +126,7 @@ const partyController = {
             }
 
             if (services && !checkPartyBudget(budget, services)) {
-                res.status(406).json({msg: "O seu orçamento é insuficiente"})
-                return
+                return res.status(406).json({msg: "O seu orçamento é insuficiente"})
             }
 
             const party = {
@@ -142,13 +140,13 @@ const partyController = {
             const updatedParty = await Party.findByIdAndUpdate(id, party)
     
             if (!updatedParty) {
-                res.status(404).json({msg: "Festa não encontrada"})
-                return
+                return res.status(404).json({msg: "Festa não encontrada"})
             } 
     
             res.status(200).json({party, msg: "Festa atualizada com sucesso."})
         } catch (error) {
-            res.status(500).json({error})
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
     }
 }
