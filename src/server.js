@@ -1,6 +1,9 @@
+// imports
+require('dotenv').config()
 const express = require("express")
 const cors = require("cors")
-require('dotenv').config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const app = express()
 
@@ -8,6 +11,7 @@ app.use(cors())
 
 app.use(express.json())
 
+// conexão com o banco
 const conn = require("./db/conn")
 conn()
 
