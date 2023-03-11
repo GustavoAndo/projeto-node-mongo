@@ -12,4 +12,6 @@ router.route("/:id").delete((req, res) => userController.delete(req, res))
 
 router.route("/:id").patch((req, res) => userController.update(req, res))
 
+router.route("/password/:id").patch((req, res) => userController.updatePassword(req, res))
+
 module.exports = router

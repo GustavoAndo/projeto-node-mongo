@@ -2,6 +2,12 @@ const {User} = require("../models/User")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+async function hashPassword(password) {
+    const salt = await bcrypt.genSalt(12)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    return hashedPassword
+}
+
 const userController = {
     
     create: async (req, res) => {
@@ -31,7 +37,7 @@ const userController = {
             const response = await User.create({
                 name,
                 email,
-                password,
+                password: await hashPassword(password),
                 profile
             })
 
@@ -132,10 +138,32 @@ const userController = {
             const updatedUser = await User.findByIdAndUpdate(id, user)
     
             if (!updatedUser) {
-                return res.status(404).json({msg: "Usuário não encontrada"})
+                return res.status(404).json({msg: "Usuário não encontrado"})
             } 
     
-            res.status(200).json({user, msg: "Usuário atualizada com sucesso."})
+            res.status(200).json({user, msg: "Usuário atualizado com sucesso."})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
+        }
+    },
+
+    updatePassword: async(req, res) => {
+        try {
+            const { id } = req.params
+            const { password } = req.body
+
+            if (!password) {
+                return res.status(422).json({msg: 'A senha é obrigatória.'})
+            }
+    
+            const updatedUser = await User.findByIdAndUpdate(id, {password: await hashPassword(password)})
+    
+            if (!updatedUser) {
+                return res.status(404).json({msg: "Usuário não encontrado"})
+            } 
+    
+            res.status(200).json({msg: "Senha atualizada com sucesso."})
         } catch (error) {
             console.log(error)
             res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
