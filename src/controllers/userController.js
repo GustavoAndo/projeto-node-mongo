@@ -75,6 +75,30 @@ const userController = {
         }
     },
 
+    delete: async(req, res) => {
+        try {
+            const id = req.params.id
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                res.status(404).json({ msg: "Id inválido." })
+                return
+            }
+
+            const user = await User.findById(id)
+              
+            if (!user) {
+                res.status(404).json({ msg: "Usuário não encontrado." })
+                return
+            }
+
+            const deletedUser = await User.findByIdAndDelete(id)
+
+            res.status(200).json({deletedUser, msg: "Usuário excluído com sucesso"})
+        } catch (error) { 
+            res.status(500).json({error})
+        }
+    },
+
     login: async (req, res) => {
         try {
             const { email, password } = req.body

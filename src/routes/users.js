@@ -8,6 +8,8 @@ router.route("/").get((req, res) => userController.getAll(req, res))
 
 router.route("/:id").get((req, res) => userController.get(req, res))
 
+router.route("/:id").delete((req, res) => userController.delete(req, res))
+
 router.route("/login").post((req, res) => userController.login(req, res))
 
 module.exports = router
