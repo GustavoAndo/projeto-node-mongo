@@ -10,7 +10,7 @@ app.use(cors())
 app.use(express.json())
 
 // conexão com o banco
-const conn = require("./db/conn")
+const conn = require("./config/connDb")
 conn()
 
 const routes = require("./routes/router")

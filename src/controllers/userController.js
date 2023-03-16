@@ -88,7 +88,7 @@ const userController = {
 
     delete: async(req, res) => {
         try {
-            const id = req.params.id
+            const { id } = req.params
             
             if (!id.match(/^[0-9a-fA-F]{24}$/)) {
                 res.status(404).json({ msg: "Id inválido." })
@@ -114,6 +114,17 @@ const userController = {
         try {
             const { id } = req.params
             const { name, email, profile } = req.body
+            
+            if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+                res.status(404).json({ msg: "Id inválido." })
+                return
+            }
+
+            const userExists = await User.findById({_id: id})
+
+            if (!userExists) {
+                return res.status(404).json({ msg: "Usuário não encontrado." })
+            }
 
             if (!name) {
                 return res.status(422).json({msg: 'O nome é obrigatório.'})
@@ -126,10 +137,10 @@ const userController = {
                 return res.status(422).json({msg: 'Perfil inválido.'})
             }
 
-            const userExists = await User.findOne({email})
+            const emailExists = await User.findOne({email})
             const oldUser = await User.findById(id)
 
-            if (email != oldUser.email && userExists) {
+            if (email != oldUser.email && emailExists) {
                 return res.status(422).json({msg: 'Por favor, utilize outro email.'})
             }
 
@@ -209,6 +220,32 @@ const userController = {
             console.log(error)
             res.status(500).json({msg: "Oops! Ocorreu um erro no servidor, tente novamente mais tarde!"})
         }
+    },
+
+    removeFile: async(req, res) => {
+        imageRouter.route('/:id')
+        .delete((req, res) => {
+            Image.findOne({ fileId: req.params.id })
+                .then((image) => {
+                    if (image) {
+                        Image.deleteOne({ fileId: req.params.id })
+                            .then(() => {
+                                gfs.delete(new mongoose.Types.ObjectId(req.params.id)) 
+                                return res.status(200).json({
+                                    success: true,
+                                    message: `File with ID: ${req.params.id} deleted`,
+                                });
+                            })
+                            .catch(err => { return res.status(500).json(err) });
+                    } else {
+                        res.status(200).json({
+                            success: false,
+                            message: `File with ID: ${req.params.id} not found`,
+                        });
+                    }
+                })
+                .catch(err => res.status(500).json(err));
+        });
     }
 
 }
